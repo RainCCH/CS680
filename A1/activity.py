@@ -1,6 +1,7 @@
 import numpy as np
 from tqdm import tqdm
 from itertools import combinations
+import argparse
 
 class Activity:
     def __init__(self):
@@ -52,6 +53,7 @@ class Activity:
         print('Test set: X:', self.X_test.shape, 'y:', self.y_test.shape)
         print('>>> Data loaded successfully!')
 
+# Q1.2
 class MultiClass_OvA_Perceptron:
     # A one-vs-all perceptron classifier
     def __init__(self, max_pass=500):
@@ -85,7 +87,7 @@ class MultiClass_OvA_Perceptron:
     def accuracy(self, y_true, y_pred):
         return np.mean(y_true == y_pred)
     
-
+# Q1.3
 class MultiClass_OvO_Perceptron:
     # A one-vs-one perceptron classifier
     def __init__(self, max_pass=500):
@@ -126,14 +128,53 @@ class MultiClass_OvO_Perceptron:
     def accuracy(self, y_true, y_pred):
         return np.mean(y_true == y_pred)
 
+# Q1.6
+class MulticlassPerceptron:
+    def __init__(self):
+        self.num_classes = None
+        self.weights = None
+
+    def fit(self, X, y, epochs=500):
+        y -= 1
+        self.num_classes = len(np.unique(y))
+        self.weights = np.zeros((self.num_classes, X.shape[1]))
+        for _ in tqdm(range(epochs)):
+            for i in range(len(X)):
+                x_i = X[i]
+                y_i = y[i]
+                y_hat = np.argmax(np.dot(self.weights, x_i))
+                if y_hat != y_i:
+                    self.weights[y_hat] -= x_i
+                    self.weights[y_i] += x_i
+
+    def predict(self, X):
+        predictions = []
+        for x in X:
+            y_hat = np.argmax(np.dot(self.weights, x))+1
+            predictions.append(y_hat)
+        return np.array(predictions)
+
+    def accuracy(self, y_true, y_pred):
+        return np.mean(y_true == y_pred)
+
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Choose a classifier to run.')
+    parser.add_argument('--classifier', choices=['OvA', 'OvO', 'Multi'], help='Specify which classifier to run: OvA, OvO, Multi', default='OvA')
+    args = parser.parse_args()
+    if args.classifier == 'OvA':
+        p = MultiClass_OvA_Perceptron(max_pass=500)
+        print('Running One-vs-All Perceptron Classifier ...')
+    elif args.classifier == 'OvO':
+        p = MultiClass_OvO_Perceptron(max_pass=500)
+        print('Running One-vs-One Perceptron Classifier ...')
+    else:
+        p = MulticlassPerceptron()
+        print('Running Multi-class Perceptron Classifier ...')
     a = Activity()
-    p = MultiClass_OvA_Perceptron(max_pass=500)
-    # p = MultiClass_OvO_Perceptron(max_pass=500)
     p.fit(a.X_train, a.y_train)
     y_pred = p.predict(a.X_test)
     acc = p.accuracy(a.y_test, y_pred)
     y_pred_train = p.predict(a.X_train)
     acc_train = p.accuracy(a.y_train, y_pred_train-1)
-    print(f'Test set accuracy: {acc:.2f}')
-    print(f'Training set accuracy: {acc_train:.2f}')
+    print(f'Test set accuracy: {acc}')
+    print(f'Training set accuracy: {acc_train}')

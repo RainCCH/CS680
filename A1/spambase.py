@@ -57,6 +57,9 @@ class Perceptron:
         linear_output = np.dot(X, self.weights) + self.bias
         y_predicted = self.activation_func(linear_output)
         return y_predicted
+
+    def accuracy(self, y_true, y_pred):
+        return np.mean(y_true == y_pred)
     
     # Activation function
     def activation_func(self, x):
@@ -70,6 +73,11 @@ if __name__ == "__main__":
     # Train perceptron
     p = Perceptron(max_pass=500)
     mistakes = p.fit(spam.X, spam.y)
+
+    # # Predict and calculate accuracy
+    y_pred = p.predict(spam.X)
+    acc = p.accuracy(spam.y, y_pred)
+    print("Accuracy:", acc)
     
     # Print weights and bias
     # print("Weights:", p.weights)
