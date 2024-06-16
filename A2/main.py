@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     print(args)
-    mnist = MNIST(epochs=args.epochs, batch_size=args.batch_size, lr=args.learning_rate, hflip=args.hflip, vflip=args.vflip, gaussian_noise=args.gaussian_noise, augment=args.augment)
+    mnist = MNIST(epochs=args.epochs, batch_size=args.batch_size, lr=args.learning_rate, augment=args.augment)
     if args.run_mode == 'train':
         mnist.train()
         mnist.plot_metrics()
