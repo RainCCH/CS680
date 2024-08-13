@@ -35,3 +35,5 @@ or
 ```bash
 sh main.sh
 ```
+
+You can view the detailed project report [here](report.pdf).
