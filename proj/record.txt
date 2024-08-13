@@ -1,0 +1,202 @@
+1. vits, model = CatBoostRegressor(iterations=1500, learning_rate=0.06, loss_function='RMSE', verbose=0, random_state=CONFIG.SEED), 0.40800
+2. vits, model = CatBoostRegressor(iterations=2000, learning_rate=0.03, loss_function='RMSE', verbose=0, random_state=CONFIG.SEED), 0.40638
+3. vits, model = CatBoostRegressor(iterations=500, learning_rate=0.05, loss_function='RMSE', verbose=0, random_state=CONFIG.SEED), 0.39322
+4. vits, model = CatBoostRegressor(iterations=1500, learning_rate=0.06, loss_function='RMSE', verbose=0, random_state=CONFIG.SEED), 0.38114, clip(1%, 99%)
+5. vits, model = CatBoostRegressor(iterations=1500, learning_rate=0.06, loss_function='RMSE', verbose=0, random_state=CONFIG.SEED), 0.35792, clip(0.1%, 98%)
+
+6. vitl, model = CatBoostRegressor(iterations=1500, learning_rate=0.06, loss_function='RMSE', verbose=0, random_state=CONFIG.SEED)
+ 17%|█▋        | 1/6 [03:43<18:39, 223.99s/it]
+Target: X4_mean, R2: 0.548
+ 33%|███▎      | 2/6 [08:40<17:45, 266.45s/it]
+Target: X11_mean, R2: 0.514
+ 50%|█████     | 3/6 [14:02<14:35, 291.93s/it]
+Target: X18_mean, R2: 0.648
+ 67%|██████▋   | 4/6 [19:33<10:14, 307.46s/it]
+Target: X26_mean, R2: 0.375
+ 83%|████████▎ | 5/6 [26:01<05:36, 336.31s/it]
+Target: X50_mean, R2: 0.430
+100%|██████████| 6/6 [31:52<00:00, 318.74s/it]
+Target: X3112_mean, R2: 0.504
+Mean R2: 0.503
+
+7. vitl, model = CatBoostRegressor(iterations=1000, learning_rate=0.06, loss_function='RMSE', verbose=0, random_state=CONFIG.SEED)
+ 17%|█▋        | 1/6 [03:00<15:00, 180.08s/it]
+Target: X4_mean, R2: 0.545
+ 33%|███▎      | 2/6 [07:11<14:47, 221.86s/it]
+Target: X11_mean, R2: 0.508
+ 50%|█████     | 3/6 [11:58<12:35, 251.91s/it]
+Target: X18_mean, R2: 0.647
+ 67%|██████▋   | 4/6 [17:52<09:44, 292.24s/it]
+Target: X26_mean, R2: 0.375
+ 83%|████████▎ | 5/6 [22:37<04:49, 289.52s/it]
+Target: X50_mean, R2: 0.423
+100%|██████████| 6/6 [26:58<00:00, 269.67s/it]
+Target: X3112_mean, R2: 0.500
+Mean R2: 0.500
+
+8. vitl, model = CatBoostRegressor(iterations=2000, learning_rate=0.06, loss_function='RMSE', verbose=0, random_state=CONFIG.SEED)
+ 17%|█▋        | 1/6 [06:53<34:29, 413.84s/it]
+Target: X4_mean, R2: 0.552
+ 33%|███▎      | 2/6 [14:51<30:04, 451.23s/it]
+Target: X11_mean, R2: 0.518
+ 50%|█████     | 3/6 [24:23<25:20, 506.72s/it]
+Target: X18_mean, R2: 0.649
+ 67%|██████▋   | 4/6 [34:56<18:32, 556.34s/it]
+Target: X26_mean, R2: 0.376
+ 83%|████████▎ | 5/6 [43:15<08:55, 535.77s/it]
+Target: X50_mean, R2: 0.432
+100%|██████████| 6/6 [53:35<00:00, 535.95s/it]
+Target: X3112_mean, R2: 0.505
+Mean R2: 0.505
+
+9. vitl, model = CatBoostRegressor(iterations=2500, learning_rate=0.06, loss_function='RMSE', verbose=0, random_state=CONFIG.SEED)
+ 17%|█▋        | 1/6 [06:53<34:29, 413.84s/it]
+Target: X4_mean, R2: 0.555
+ 33%|███▎      | 2/6 [14:51<30:04, 451.23s/it]
+Target: X11_mean, R2: 0.522
+ 50%|█████     | 3/6 [24:23<25:20, 506.72s/it]
+Target: X18_mean, R2: 0.650
+ 67%|██████▋   | 4/6 [34:56<18:32, 556.34s/it]
+Target: X26_mean, R2: 0.374
+ 83%|████████▎ | 5/6 [43:15<08:55, 535.77s/it]
+Target: X50_mean, R2: 0.436
+100%|██████████| 6/6 [53:35<00:00, 535.95s/it]
+Target: X3112_mean, R2: 0.507
+Mean R2: 0.507
+
+10. vitl, model = CatBoostRegressor(iterations=3000, learning_rate=0.06, loss_function='RMSE', verbose=0, random_state=CONFIG.SEED)
+ 17%|█▋        | 1/6 [11:29<57:29, 689.95s/it]
+Target: X4_mean, R2: 0.556
+ 33%|███▎      | 2/6 [19:21<37:25, 561.44s/it]
+Target: X11_mean, R2: 0.524
+ 50%|█████     | 3/6 [26:49<25:29, 509.79s/it]
+Target: X18_mean, R2: 0.651
+ 67%|██████▋   | 4/6 [34:00<15:56, 478.42s/it]
+Target: X26_mean, R2: 0.372
+ 83%|████████▎ | 5/6 [41:40<07:51, 471.87s/it]
+Target: X50_mean, R2: 0.436
+100%|██████████| 6/6 [51:49<00:00, 518.17s/it]
+Target: X3112_mean, R2: 0.508
+Mean R2: 0.508
+
+11. vitb, XGBoost 1000
+Training and evaluating models...
+  0%|                                                                                                                                                                                                                              | 0/6 [00:00<?, ?it/s]
+  Target: X4_mean, R2: 0.367
+ 17%|███████████████████████████████████▋                                                                                                                                                                                  | 1/6 [00:19<01:36, 19.30s/it]
+ Target: X11_mean, R2: 0.371
+ 33%|███████████████████████████████████████████████████████████████████████▎                                                                                                                                              | 2/6 [00:39<01:20, 20.06s/it]
+ Target: X18_mean, R2: 0.561
+ 50%|███████████████████████████████████████████████████████████████████████████████████████████████████████████                                                                                                           | 3/6 [01:01<01:01, 20.62s/it]
+ Target: X26_mean, R2: 0.273
+ 67%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▋                                                                       | 4/6 [01:24<00:43, 21.81s/it]
+ Target: X50_mean, R2: 0.281
+ 83%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████▎                                   | 5/6 [01:56<00:25, 25.41s/it]
+ Target: X3112_mean, R2: 0.413
+100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 6/6 [02:28<00:00, 24.75s/it]
+Mean R2: 0.378
+
+vitb, 1500: XGBoost
+Training and evaluating models...
+Target: X4_mean, R2: 0.426
+Target: X11_mean, R2: 0.418
+Target: X18_mean, R2: 0.607
+Target: X26_mean, R2: 0.277
+Target: X50_mean, R2: 0.329
+Target: X3112_mean, R2: 0.451
+Mean R2: 0.418
+
+vitl, 1500, XGBoost
+Training and evaluating models...
+Target: X4_mean, R2: 0.481
+Target: X11_mean, R2: 0.469
+Target: X18_mean, R2: 0.606
+Target: X26_mean, R2: 0.365
+Target: X50_mean, R2: 0.375
+Target: X3112_mean, R2: 0.475
+Mean R2: 0.462
+
+
+
+12. vitb, 1500
+ 17%|█▋        | 1/6 [03:19<16:35, 199.15s/it]
+Target: X4_mean, R2: 0.481
+ 33%|███▎      | 2/6 [07:13<14:39, 219.89s/it]
+Target: X11_mean, R2: 0.479
+ 50%|█████     | 3/6 [11:30<11:50, 236.73s/it]
+Target: X18_mean, R2: 0.636
+ 67%|██████▋   | 4/6 [15:59<08:18, 249.41s/it]
+Target: X26_mean, R2: 0.341
+ 83%|████████▎ | 5/6 [21:00<04:28, 268.11s/it]
+Target: X50_mean, R2: 0.389
+100%|██████████| 6/6 [25:58<00:00, 259.72s/it]
+Target: X3112_mean, R2: 0.482
+Mean R2: 0.468
+
+6. vitl, model = CatBoostRegressor(iterations=1500, learning_rate=0.06, loss_function='RMSE', verbose=0, random_state=CONFIG.SEED)
+ 17%|█▋        | 1/6 [03:43<18:39, 223.99s/it]
+Target: X4_mean, R2: 0.548
+ 33%|███▎      | 2/6 [08:40<17:45, 266.45s/it]
+Target: X11_mean, R2: 0.514
+ 50%|█████     | 3/6 [14:02<14:35, 291.93s/it]
+Target: X18_mean, R2: 0.648
+ 67%|██████▋   | 4/6 [19:33<10:14, 307.46s/it]
+Target: X26_mean, R2: 0.375
+ 83%|████████▎ | 5/6 [26:01<05:36, 336.31s/it]
+Target: X50_mean, R2: 0.430
+100%|██████████| 6/6 [31:52<00:00, 318.74s/it]
+Target: X3112_mean, R2: 0.504
+Mean R2: 0.503
+
+
+3000
+ 17%|█▋        | 1/6 [10:06<50:34, 606.86s/it]
+Target: X4_mean, R2: 0.562
+ 33%|███▎      | 2/6 [22:54<46:46, 701.68s/it]
+Target: X11_mean, R2: 0.540
+ 50%|█████     | 3/6 [36:28<37:38, 752.81s/it]
+Target: X18_mean, R2: 0.642
+ 67%|██████▋   | 4/6 [49:55<25:48, 774.14s/it]
+Target: X26_mean, R2: 0.362
+ 83%|████████▎ | 5/6 [1:04:48<13:37, 817.11s/it]
+Target: X50_mean, R2: 0.451
+100%|██████████| 6/6 [1:28:51<00:00, 888.65s/it] 
+Target: X3112_mean, R2: 0.518
+Mean R2: 0.512
+
+vits: 1500
+Target: X4_mean, R2: 0.415
+Target: X11_mean, R2: 0.425
+Target: X18_mean, R2: 0.580
+Target: X26_mean, R2: 0.298
+Target: X50_mean, R2: 0.319
+Target: X3112_mean, R2: 0.443
+Mean R2: 0.413
+
+vitb, 1500
+Target: X4_mean, R2: 0.481
+Target: X11_mean, R2: 0.479
+Target: X18_mean, R2: 0.636
+Target: X26_mean, R2: 0.341
+Target: X50_mean, R2: 0.389
+Target: X3112_mean, R2: 0.482
+Mean R2: 0.468
+
+vitl: 1500
+Target: X4_mean, R2: 0.548
+Target: X11_mean, R2: 0.514
+Target: X18_mean, R2: 0.648
+Target: X26_mean, R2: 0.375
+Target: X50_mean, R2: 0.430
+Target: X3112_mean, R2: 0.504
+Mean R2: 0.503
+
+vitg: 1500
+Target: X4_mean, R2: 0.553
+Target: X11_mean, R2: 0.531
+Target: X18_mean, R2: 0.638
+Target: X26_mean, R2: 0.354
+Target: X50_mean, R2: 0.442
+Target: X3112_mean, R2: 0.514
+Mean R2: 0.505
+
