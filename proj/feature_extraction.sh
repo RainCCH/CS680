@@ -1,0 +1,1 @@
+python feature_extraction.py --data_path ./data --model_version dinov2_vitl14_reg
