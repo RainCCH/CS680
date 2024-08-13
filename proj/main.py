@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 from tqdm import tqdm
 from catboost import Pool, CatBoostRegressor
+import xgboost as xgb
 import argparse
 
 class Config():
@@ -76,7 +77,7 @@ def prepare_features(train_features, val_features, test_features, train_image_em
 
     return train_features_df, val_features_df, test_features_df
 
-def train_and_evaluate(train_features_df, val_features_df, y_train, y_val, config, learning_rate):
+def train_and_evaluate_catboost(train_features_df, val_features_df, y_train, y_val, config, learning_rate):
     models = {}
     scores = {}
     for i, col in tqdm(enumerate(config.TARGET_COLUMNS), total=len(config.TARGET_COLUMNS)):
@@ -85,7 +86,7 @@ def train_and_evaluate(train_features_df, val_features_df, y_train, y_val, confi
         train_pool = Pool(train_features_df, y_curr, embedding_features=['embeddings'])
         val_pool = Pool(val_features_df, y_curr_val, embedding_features=['embeddings'])
 
-        model = CatBoostRegressor(iterations=1000, learning_rate=learning_rate, loss_function='RMSE', verbose=0, random_state=config.SEED)
+        model = CatBoostRegressor(iterations=1500, learning_rate=learning_rate, loss_function='RMSE', verbose=100, random_state=config.SEED)
         model.fit(train_pool)
         models[col] = model
         
@@ -98,13 +99,62 @@ def train_and_evaluate(train_features_df, val_features_df, y_train, y_val, confi
     print(f'Mean R2: {np.mean(list(scores.values())):.3f}')
     return models
 
-def create_submission(models, test, test_features_df, config):
+def train_and_evaluate_xgboost(train_features_df, val_features_df, y_train, y_val, config, learning_rate):
+    models = {}
+    scores = {}
+    
+    # Ensure all columns in the DataFrame are numeric
+    train_features_numeric = train_features_df.select_dtypes(include=[np.number])
+    val_features_numeric = val_features_df.select_dtypes(include=[np.number])
+
+    for i, col in tqdm(enumerate(config.TARGET_COLUMNS), total=len(config.TARGET_COLUMNS)):
+        y_curr = y_train[:, i]
+        y_curr_val = y_val[:, i]
+
+        # Create DMatrix for XGBoost using only numeric columns
+        dtrain = xgb.DMatrix(train_features_numeric, label=y_curr)
+        dval = xgb.DMatrix(val_features_numeric, label=y_curr_val)
+
+        # Set XGBoost parameters
+        xgb_params = {
+            'objective': 'reg:squarederror',
+            'learning_rate': learning_rate,
+            'max_depth': 6,
+            'subsample': 0.8,
+            'colsample_bytree': 0.8,
+            'seed': config.SEED
+        }
+
+        # Train the model
+        model = xgb.train(xgb_params, dtrain, num_boost_round=1500, evals=[(dval, 'eval')],
+                          early_stopping_rounds=50, verbose_eval=0)
+
+        # Save the model
+        models[col] = model
+
+        # Predict on the validation set
+        y_curr_val_pred = model.predict(dval)
+
+        # Evaluate performance on validation set
+        r2_col = r2_score(y_curr_val, y_curr_val_pred)
+        scores[col] = r2_col
+        print(f'Target: {col}, R2: {r2_col:.3f}')
+
+    print(f'Mean R2: {np.mean(list(scores.values())):.3f}')
+    return models
+
+def create_submission(models, test, test_features_df, config, model_type='catboost'):
     submission = pd.DataFrame({'id': test['id']})
     submission[config.TARGET_COLUMNS] = 0
     submission.columns = submission.columns.str.replace('_mean', '')
     for i, col in enumerate(config.TARGET_COLUMNS):
-        test_pool = Pool(test_features_df, embedding_features=['embeddings'])
-        col_pred = models[col].predict(test_pool)
+        if model_type == 'catboost':
+            test_pool = Pool(test_features_df)
+            col_pred = models[col].predict(test_pool)
+        else:
+            test_features_numeric = test_features_df.select_dtypes(include=[np.number])
+            dtest = xgb.DMatrix(test_features_numeric)
+            col_pred = models[col].predict(dtest)
         submission[col.replace('_mean', '')] = col_pred
 
     submission.to_csv('submission.csv', index=False)
@@ -112,9 +162,10 @@ def create_submission(models, test, test_features_df, config):
 def main():
     parser = argparse.ArgumentParser(description='Training script for regression model.')
     parser.add_argument('--data_path', type=str, default='./data', help='Path to the directory containing train.csv and test.csv')
-    parser.add_argument('--suffix', type=str, default='dinov2_vitb14_reg', choices=['dinov2_vits14_reg', 'dinov2_vitb14_reg', 'dinov2_vitl14_reg'], help='Suffix for embedding files')
+    parser.add_argument('--suffix', type=str, default='dinov2_vitg14_reg', choices=['dinov2_vits14_reg', 'dinov2_vitb14_reg', 'dinov2_vitl14_reg', 'dinov2_vitg14_reg'], help='Suffix for embedding files')
     parser.add_argument('--learning-rate', type=float, default=0.06, help='Learning rate for the model')
     parser.add_argument('--first-n-poly-feats', type=int, default=1000, help='Number of polynomial features to use')
+    parser.add_argument('--model_type', type=str, default='catboost', choices=['catboost', 'xgboost'], help='Model type to use: catboost or xgboost')
 
     args = parser.parse_args()
 
@@ -128,9 +179,9 @@ def main():
     print("Data loading completed!")
     
     print("Data preprocessing...")
-    train_features_mask, val_features_mask, test_features, y_train_mask, y_val_mask, feature_columns = preprocess_data(train, test, config)
-    print(f"Train feature shape: {train_features_mask.shape}")
-    print(f"Validation feature shape: {val_features_mask.shape}")
+    train_features, val_features, test_features, y_train, y_val, feature_columns = preprocess_data(train, test, config)
+    print(f"Train feature shape: {train_features.shape}")
+    print(f"Validation feature shape: {val_features.shape}")
     print(f"Test feature shape: {test_features.shape}")
     print("Data preprocessing completed!")
     
@@ -142,22 +193,27 @@ def main():
     print("Embeddings loading completed!")
     
     print("Preparing features...")
-    train_features_mask_df, val_features_mask_df, test_features_mask_df = prepare_features(
-        train_features_mask, val_features_mask, test_features,
+    train_features_df, val_features_df, test_features_df = prepare_features(
+        train_features, val_features, test_features,
         train_image_embeddings, val_image_embeddings, test_image_embeddings,
         args.first_n_poly_feats
     )
-    print(f"Train features after preparation shape: {train_features_mask_df.shape}")
-    print(f"Validation features after preparation shape: {val_features_mask_df.shape}")
-    print(f"Test features after preparation shape: {test_features_mask_df.shape}")
+    print(f"Train features after preparation shape: {train_features_df.shape}")
+    print(f"Validation features after preparation shape: {val_features_df.shape}")
+    print(f"Test features after preparation shape: {test_features_df.shape}")
     print("Feature preparation completed!")
 
     print("Training and evaluating models...")
-    models = train_and_evaluate(train_features_mask_df, val_features_mask_df, y_train_mask, y_val_mask, config, args.learning_rate)
+    if args.model_type == 'catboost':
+        models = train_and_evaluate_catboost(train_features_df, val_features_df, y_train, y_val, config, args.learning_rate)
+    elif args.model_type == 'xgboost':
+        models = train_and_evaluate_xgboost(train_features_df, val_features_df, y_train, y_val, config, args.learning_rate)
+    else:
+        raise ValueError("Invalid model type. Choose either 'catboost' or 'xgboost'.")
     print("Model training and evaluation completed!")
     
     print("Creating submission file...")
-    create_submission(models, test, test_features_mask_df, config)
+    create_submission(models, test, test_features_df, config, args.model_type)
     print("Submission file created successfully!")
 
 if __name__ == '__main__':

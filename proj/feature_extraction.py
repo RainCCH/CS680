@@ -21,7 +21,7 @@ def get_image_embeddings(model, preprocess, batch_size, df, device):
 def main():
     # Argument parser for command-line options
     parser = argparse.ArgumentParser(description='Feature extraction using pretrained model')
-    parser.add_argument('--model_version', type=str, choices=['dinov2_vits14_reg', 'dinov2_vitb14_reg', 'dinov2_vitl14_reg'],
+    parser.add_argument('--model_version', type=str, choices=['dinov2_vits14_reg', 'dinov2_vitb14_reg', 'dinov2_vitl14_reg', 'dinov2_vitg14_reg'],
                         default='dinov2_vits14_reg', help='Specify the model version to use')
     parser.add_argument('--data_path', type=str, default='./data', help='Path to the directory containing train.csv and test.csv')
     parser.add_argument('--test_size', type=int, default=2196)
